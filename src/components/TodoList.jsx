@@ -2,6 +2,9 @@ import React from 'react';
 import TodoItem from './TodoItem';
 
 const TodoList = ({ todos }) => {
+    if (!todos.length) {
+        return <p>Список дел пока пуст</p>
+    }
     return (
         <ul>
             { todos.map(todo => <TodoItem key={todo.id} title={todo.title} />) }
