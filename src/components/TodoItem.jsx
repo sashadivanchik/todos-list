@@ -1,26 +1,53 @@
 import React, { useContext } from 'react';
 import { Context } from '../context/context';
 import { TOGGLE_TODO, REMOVE_TODO } from '../constants';
+import trashIcon from '../icons/delete.png';
 
 const TodoItem = ({ title, id, completed }) => {
     const { dispatch } = useContext(Context);
 
+    const toggleTodo = (id) => {
+        dispatch({ type: TOGGLE_TODO, payload: id})
+    };
+
+    const removeTodo = (id) => {
+        dispatch({ type: REMOVE_TODO, payload: id}) 
+    };
+
+    const toggleTodoHandler = (event, id) => {
+        if (event.key === 'Enter') {
+            toggleTodo(id);
+        }
+    };
+
+    const removeTodoHandler = (event, id) => {
+        if (event.key === 'Enter') {
+            removeTodo(id);
+        }
+    }
+
     return (
         <li className={`todo ${completed ? 'completed' : ''}`}>
-            <label>
+            <label className='todo__label'>
                 <input
+                    className='todo__input'
                     type="checkbox"
                     checked={ completed }
-                    onChange={ () => dispatch({ type: TOGGLE_TODO, payload: id}) }
+                    onChange={ () => toggleTodo(id) }
+                    onKeyPress={ (e) => toggleTodoHandler(e, id) }
                 />
-                <span>{title}</span>
-
-                <i
-                    className="material-icons red-text"
-                    onClick={ () => dispatch({ type: REMOVE_TODO, payload: id}) }
+                <span
+                    className='todo__title'
                 >
-                    delete
-                </i>
+                    {title}
+                </span>
+                <button
+                    className="todo__delete-button"
+                    onClick={ () => removeTodo(id) }
+                    onKeyPress={ (e) => removeTodoHandler(e, id) }
+                >
+                    <img className='todo__delete-img' src={trashIcon} alt=""/>
+                </button>
             </label>
         </li>
     )

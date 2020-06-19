@@ -20,7 +20,6 @@ const App = () => {
     };
 
     const addTodo = (event) => {
-
         if (event.target.value === "") {
             return;
         }
@@ -36,15 +35,23 @@ const App = () => {
             dispatch
         }}>
             <div className='container'>
-                <h1>Todo List</h1>
-                <div className='input-field'>
+                <h1 className='container__title'>Todo List</h1>
+                <div className='container__input-field'>
                     <input 
+                        className='container__input'
+                        id="todoInput"
                         type="text"
                         value={ todoTitle }
                         onChange={ changeInput }
                         onKeyPress={ addTodo }
+                        required
                     />
-                    <label htmlFor="">Todo name</label>
+                    <label
+                        className='container__input-label' 
+                        htmlFor="todoInput"
+                    >
+                        Todo name
+                    </label>
                 </div>
                 <TodoList todos={state} />
             </div>
