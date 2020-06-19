@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import TodoList from './TodoList';
 import { Context } from '../context/context';
+import { todoReducer } from '../reducers/todoReducer';
+import { ADD_TODO } from '../constants';
 
 const App = () => {
-    const [ todos, setTodos ] = useState([]);
-    const [ todoTitle, setTodoTitle ] = useState('');
+    const [ state, dispatch ] = useReducer(
+        todoReducer, 
+        JSON.parse(localStorage.getItem("todos")) || []
+    );
+    const [todoTitle, setTodoTitle] = useState("");
 
     useEffect(() => {
-        const raw = localStorage.getItem('todos') || '[]';
-        setTodos(JSON.parse(raw))
-    },[]);
-
-    useEffect(() => {
-        localStorage.setItem('todos', JSON.stringify(todos))
-    }, [todos])
+        localStorage.setItem('todos', JSON.stringify(state))
+    }, [state])
 
     const changeInput = (event) => {
-        setTodoTitle(event.target.value)
+        setTodoTitle(event.target.value);
     };
 
     const addTodo = (event) => {
@@ -26,42 +26,14 @@ const App = () => {
         }
 
         if (event.key === 'Enter') {
-            setTodos([
-                ...todos,
-                {
-                    id: Date.now(),
-                    title: todoTitle,
-                    completed: false
-                }
-            ])
-            setTodoTitle('')
+            dispatch({type: ADD_TODO, payload: todoTitle})
+            setTodoTitle('');
         }
-    };
-
-    const removeTodo = (id) => {
-        console.log('remove', id)
-        const result = todos.filter((todo) => todo.id !== id)
-        setTodos(result)
-    };
-
-    const toggleTodo = (id) => {
-        console.log('toggle', id)
-        const result = todos.map((todo) => {
-            if (todo.id === id) {
-                return {
-                    ...todo,
-                    completed: !todo.completed,
-                };
-            }
-            return todo;
-        })
-        setTodos(result)
     };
 
     return (
         <Context.Provider value={{
-            removeTodo,
-            toggleTodo
+            dispatch
         }}>
             <div className='container'>
                 <h1>Todo List</h1>
@@ -74,7 +46,7 @@ const App = () => {
                     />
                     <label htmlFor="">Todo name</label>
                 </div>
-                <TodoList todos={todos} />
+                <TodoList todos={state} />
             </div>
         </Context.Provider>
     )

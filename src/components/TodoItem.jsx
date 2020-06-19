@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import { Context } from '../context/context';
+import { TOGGLE_TODO, REMOVE_TODO } from '../constants';
 
 const TodoItem = ({ title, id, completed }) => {
-    const { removeTodo, toggleTodo } = useContext(Context);
+    const { dispatch } = useContext(Context);
 
     return (
         <li className={`todo ${completed ? 'completed' : ''}`}>
@@ -10,13 +11,13 @@ const TodoItem = ({ title, id, completed }) => {
                 <input
                     type="checkbox"
                     checked={ completed }
-                    onChange={ () => toggleTodo(id) }
+                    onChange={ () => dispatch({ type: TOGGLE_TODO, payload: id}) }
                 />
                 <span>{title}</span>
 
                 <i
                     className="material-icons red-text"
-                    onClick={ () => removeTodo(id) }
+                    onClick={ () => dispatch({ type: REMOVE_TODO, payload: id}) }
                 >
                     delete
                 </i>
