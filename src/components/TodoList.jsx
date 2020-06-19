@@ -6,8 +6,15 @@ const TodoList = ({ todos }) => {
         return <p>Список дел пока пуст</p>
     }
     return (
-        <ul>
-            { todos.map(todo => <TodoItem key={todo.id} title={todo.title} id={todo.id} completed={todo.completed} />) }
+        <ul className='todo-list'>
+            { todos.map(todo => 
+                <TodoItem 
+                    key={todo.id} 
+                    title={todo.title} 
+                    id={todo.id} 
+                    completed={todo.completed} 
+                />) 
+            }
         </ul>
     )
 };
